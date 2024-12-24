@@ -2,4 +2,5 @@ ip link set eth0 address aa:bb:01:02:cc:de
 ip addr add 192.168.141.101/24 dev eth0
 ip link set eth0 up
 ip route add default via 192.168.141.1
-/etc/init.d/xinetd start
+
+echo "nameserver 192.168.141.1" > /etc/resolv.conf

@@ -1,18 +1,22 @@
-ip link set eth0 address aa:bb:03:01:cc:de
-ip link set eth1 address aa:bb:03:02:cc:de
+#!/bin/bash
 
-# LAN Interface Configuration
+# Remount filesystem as read-write
+mount -o remount,rw /
+
+# Enable IP forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward || echo "Failed to enable IP forwarding"
+
+# Configure WAN interface (eth1)
+ip link set eth1 up
+dhclient eth1 || echo "Failed to obtain IP for eth1"
+
+# Configure DNS
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+
+# Configure NAT
+iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE || echo "Failed to configure NAT"
+
+# Configure LAN interface (eth0)
 ip addr add 192.168.141.1/24 dev eth0
 ip link set eth0 up
-
-# WAN Interface Configuration
-ip addr add 10.0.0.1/24 dev eth1
-ip link set eth1 up
-
-# Enable IP Forwarding
-echo 1 > /proc/sys/net/ipv4/ip_forward
-
-# Configure NAT (optional if needed for internet access)
-iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
-
-/etc/init.d/xinetd start
