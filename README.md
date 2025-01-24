@@ -18,7 +18,7 @@ kathara lstart
 1. Exécutez le script suivant dans votre terminal :
 
 ```bash
-python3 ajout-connexion.py
+python3 ajout_connexion.py
 ```
 
 2. Entrez les informations demandées lorsque le script vous le demande.
